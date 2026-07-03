@@ -56,13 +56,25 @@ return user;
 };
 
 export const fetchpayments = async (username) => {
-  await connectDb();
-  let user = await User.findOne({ username: username });
-  const secret = user.razorpaysecret;
-  let p = await Payment.find({ to_user: username, done: true })
+    await connectDb();
+    
+    // 1. Clean the username string by removing accidental spaces and forcing lowercase
+    const cleanUsername = username.trim().toLowerCase();
+
+    let user = await User.findOne({ username: cleanUsername });
+    if (!user) return []; // Safety check: if no user exists, return an empty list
+
+    const secret = user.razorpaysecret;
+
+    // 2. Use a case-insensitive regular expression query for to_user
+    let p = await Payment.find({ 
+        to_user: { $regex: new RegExp(`^${cleanUsername}$`, 'i') }, 
+        done: true 
+    })
     .sort({ amount: -1 })
     .lean();
-  return JSON.parse(JSON.stringify(p));
+
+    return JSON.parse(JSON.stringify(p));
 };
 
 export const updateProfile = async (ndata, oldusername) => {

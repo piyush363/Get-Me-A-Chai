@@ -25,21 +25,25 @@ const PaymentPage = ({ username }) => {
   }, []);
 
   useEffect(() => {
-    if (searchParams.get("paymentdone") == "true") {
-      toast("Thanks for your donation!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+    // 1. Only run this logic if the URL actually contains '?paymentdone=true'
+    if (searchParams.get("paymentdone") === "true") {
+        toast("Thanks for your donation!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+        });
+        
+        // 2. Clear the '?paymentdone=true' parameter from the URL safely 
+        // ONLY after showing the toast notification.
+        router.push(`/${username}`, { scroll: false });
     }
-    router.push(`/${username}`);
-  }, []);
+}, [searchParams, username, router]);
 
   const handleChange = (e) => {
     setpaymentform({ ...paymentform, [e.target.name]: e.target.value });
@@ -124,22 +128,23 @@ const PaymentPage = ({ username }) => {
       <ToastContainer />
       <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
 
-      <div className="cover w-full relative">
-        <img
-          className="object-cover w-full md:h-98 h-52"
-          src={currentUser?.coverpic || "/default-cover.png"}
-          alt="Cover Banner"
-        />
-        <div className="absolute -bottom-10 right-[38%] md:right-[47%] rounded-full size-26 ">
-          <img
-            width={110}
-            height={110}
-            className="rounded-full object-cover border-2 border-white size-27"
-            src={currentUser?.profilepic || "/default-avatar.png"}
-            alt="Profile Picture"
-          />
-        </div>
-      </div>
+    <div className="cover w-full relative">
+  {/* Cover Banner - Increased height for desktop and mobile */}
+  <img
+    className="object-cover w-full md:h-80 h-64"
+    src={currentUser?.coverpic || "/default-cover.png"}
+    alt="Cover Banner"
+  />
+  
+  {/* Profile Picture Container - Enforced exact proportions for a perfect circle */}
+  <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 md:left-1/2 md:-translate-x-1/2 rounded-full border-4 border-white overflow-hidden size-28 shadow-lg">
+    <img
+      className="w-full h-full object-cover"
+      src={currentUser?.profilepic || "/default-avatar.png"}
+      alt="Profile Picture"
+    />
+  </div>
+</div>
       <div className="info flex justify-center items-center flex-col my-14">
         <div>@{username}</div>
         <div className="text-slate-400">Lets help {username} get a chai!</div>
@@ -212,19 +217,19 @@ const PaymentPage = ({ username }) => {
             <div className="mx-6 mt-1.5 mb-3 gap-3 flex flex-col md:flex-row">
               <button
                 className="bg-slate-700 rounded-lg p-1 cursor-pointer"
-                onClick={() => pay(100)}
+                onClick={() => pay(10)}
               >
                 Pay ₹10
               </button>
               <button
                 className="bg-slate-700 rounded-lg p-1 cursor-pointer"
-                onClick={() => pay(300)}
+                onClick={() => pay(30)}
               >
                 Pay ₹30
               </button>
               <button
                 className="bg-slate-700 rounded-lg p-1 cursor-pointer"
-                onClick={() => pay(500)}
+                onClick={() => pay(50)}
               >
                 Pay ₹50
               </button>

@@ -103,21 +103,76 @@ export default function Home() {
       <div className="h-[1px] bg-gradient-to-r from-transparent via-white to-transparent opacity-30"></div>
 
       {/* Video Section */}
-      <section className="container mx-auto py-20 px-6 text-white text-center">
-        <h2 className="text-4xl font-bold mb-12">
-          Learn More About Us
-        </h2>
+      <section className="py-20 px-6">
+  <div className="max-w-6xl mx-auto">
 
-        <div className="max-w-4xl mx-auto overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
-          <iframe
-            className="w-full aspect-video"
-            src="https://www.youtube.com/embed/ojuUnfqnUI0?si=wMUv4DG3ia6Wt4zn"
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
-      </section>
+    <h2 className="text-4xl font-bold text-center text-white mb-4">
+      Why Choose <span className="text-green-400">Get Me A Chai?</span>
+    </h2>
+
+   <p className="text-center text-gray-400 max-w-2xl mx-auto mb-14">
+  Get Me A Chai is a crowdfunding platform that enables fans to support their
+  favorite creators through secure online payments. Whether you're a developer,
+  artist, musician, writer, or content creator, your community can contribute
+  and help bring your ideas to life.
+</p>
+
+    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+      <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 hover:border-green-400 transition-all duration-300 hover:-translate-y-2">
+        <div className="text-5xl mb-4">☕</div>
+        <h3 className="text-xl font-semibold text-white mb-2">
+          Support Creators
+        </h3>
+        <p className="text-gray-400">
+          Help your favorite creators by buying them a chai with just a few
+          clicks.
+        </p>
+      </div>
+
+      <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 hover:border-blue-400 transition-all duration-300 hover:-translate-y-2">
+        <div className="text-5xl mb-4">💳</div>
+        <h3 className="text-xl font-semibold text-white mb-2">
+          Secure Payments
+        </h3>
+        <p className="text-gray-400">
+          Integrated with Razorpay to ensure safe, fast, and reliable
+          transactions.
+        </p>
+      </div>
+
+      <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 hover:border-purple-400 transition-all duration-300 hover:-translate-y-2">
+        <div className="text-5xl mb-4">🔐</div>
+        <h3 className="text-xl font-semibold text-white mb-2">
+          User Authentication
+        </h3>
+        <p className="text-gray-400">
+          Sign in securely using NextAuth and manage your creator profile with
+          ease.
+        </p>
+      </div>
+
+      <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 hover:border-yellow-400 transition-all duration-300 hover:-translate-y-2">
+        <div className="text-5xl mb-4">⚡</div>
+        <h3 className="text-xl font-semibold text-white mb-2">
+          Fast & Responsive
+        </h3>
+        <p className="text-gray-400">
+          Built with Next.js, MongoDB, and Tailwind CSS for a smooth experience
+          on every device.
+        </p>
+      </div>
+
+    </div>
+
+    <div className="text-center mt-16">
+      <button className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full text-white font-semibold text-lg hover:scale-105 transition-all duration-300 shadow-lg shadow-green-500/30">
+        🚀 Start Supporting
+      </button>
+    </div>
+
+  </div>
+</section>
     </>
   );
 }
