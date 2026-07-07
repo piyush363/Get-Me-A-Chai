@@ -166,9 +166,11 @@ export default function Home() {
     </div>
 
     <div className="text-center mt-16">
+      <Link href="/login">
       <button className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full text-white font-semibold text-lg hover:scale-105 transition-all duration-300 shadow-lg shadow-green-500/30">
         🚀 Start Supporting
       </button>
+      </Link>
     </div>
 
   </div>
