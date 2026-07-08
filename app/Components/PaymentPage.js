@@ -132,7 +132,7 @@ const PaymentPage = ({ username }) => {
   {/* Cover Banner - Increased height for desktop and mobile */}
   <img
     className="object-cover w-full md:h-80 h-64"
-    src={currentUser?.coverpic || "/default-cover.png"}
+    src={currentUser.coverpic}
     alt="Cover Banner"
   />
   
@@ -140,7 +140,7 @@ const PaymentPage = ({ username }) => {
   <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 md:left-1/2 md:-translate-x-1/2 rounded-full border-4 border-white overflow-hidden size-28 shadow-lg">
     <img
       className="w-full h-full object-cover"
-      src={currentUser?.profilepic || "/default-avatar.png"}
+      src={currentUser.profilepic}
       alt="Profile Picture"
     />
   </div>
