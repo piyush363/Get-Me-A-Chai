@@ -2,19 +2,12 @@
 
 import Razorpay from "razorpay";
 import Payment from "@/app/models/Payment";
-import connectDb from "@/app//db/connectDb";
+import connectDb from "@/app/db/connectDb";
 import User from "@/app/models/User";
-import { Turret_Road } from "next/font/google";
 
 export const initiate = async (amount, to_username, paymentform) => {
   await connectDb();
-  // fetch the secret of the user who is getting the payment
   let user = await User.findOne({ username: to_username });
-  const secret = user.razorpaysecret;
-  console.log(user);
-  console.log(
-    process.env.KEY_ID ? "yes, it has a value" : "No it is undefined",
-  );
 
   var instance = new Razorpay({
     key_id: process.env.KEY_ID,
@@ -29,7 +22,6 @@ export const initiate = async (amount, to_username, paymentform) => {
 
   let x = await instance.orders.create(options);
 
-  // create a payment object which shows a pending payment in the database
   await Payment.create({
     oid: x.id,
     amount: amount,
@@ -43,60 +35,55 @@ export const initiate = async (amount, to_username, paymentform) => {
 
 export const fetchuser = async (username) => {
   await connectDb();
- await connectDb();
-let u = await User.findOne({ username: username });
+  const cleanUsername = username.trim().toLowerCase();
+  
+  // Use a case-insensitive regex match for username fetching
+  let u = await User.findOne({ 
+    username: { $regex: new RegExp(`^${cleanUsername}$`, "i") } 
+  });
 
-// If no user is found in the database, return null safely
-if (!u) {
+  if (!u) {
     return null;
-}
+  }
 
-let user = u.toObject({ flattenObjectIds: true });
-return user;
+  // Convert to plain object safely so profilepic & coverpic fields pass cleanly to the Client Component
+  return JSON.parse(JSON.stringify(u));
 };
 
 export const fetchpayments = async (username) => {
-    await connectDb();
-    
-    // 1. Clean the username string by removing accidental spaces and forcing lowercase
-    const cleanUsername = username.trim().toLowerCase();
+  await connectDb();
+  const cleanUsername = username.trim().toLowerCase();
 
-    let user = await User.findOne({ username: cleanUsername });
-    if (!user) return []; // Safety check: if no user exists, return an empty list
+  let user = await User.findOne({ 
+    username: { $regex: new RegExp(`^${cleanUsername}$`, "i") } 
+  });
+  if (!user) return [];
 
-    const secret = user.razorpaysecret;
+  let p = await Payment.find({ 
+    to_user: { $regex: new RegExp(`^${cleanUsername}$`, 'i') }, 
+    done: true 
+  })
+  .sort({ amount: -1 })
+  .lean();
 
-    // 2. Use a case-insensitive regular expression query for to_user
-    let p = await Payment.find({ 
-        to_user: { $regex: new RegExp(`^${cleanUsername}$`, 'i') }, 
-        done: true 
-    })
-    .sort({ amount: -1 })
-    .lean();
-
-    return JSON.parse(JSON.stringify(p));
+  return JSON.parse(JSON.stringify(p));
 };
 
 export const updateProfile = async (ndata, oldusername) => {
-  // 1. ndata is directly the form object now
   await connectDb();
 
-  // If they are trying to change their username
   if (oldusername !== ndata.username) {
-    // Check if the new username already exists
     let u = await User.findOne({ username: ndata.username });
-
     if (u) {
       return { error: "Username already exists" };
     }
 
     await User.updateOne({ username: oldusername }, ndata);
-
     await Payment.updateMany(
       { to_user: oldusername },
       { to_user: ndata.username }
     );
   } else {
-    await User.updateOne({ email: ndata.email }, ndata);
+    await User.updateOne({ username: oldusername }, ndata);
   }
 };

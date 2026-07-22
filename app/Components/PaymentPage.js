@@ -103,23 +103,31 @@ const PaymentPage = ({ username }) => {
 
       <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
 
-      <div className="cover w-full relative">
-        {/* Cover Banner with Fallback */}
-        <img
-          className="object-cover w-full md:h-80 h-64"
-          src={currentUser?.coverpic && currentUser?.coverpic.trim() !== "" ? currentUser.coverpic : defaultCover}
-          alt="Cover Banner"
-        />
+     <div className="cover w-full relative">
+ 
+  <img
+    className="object-cover w-full md:h-80 h-64"
+    src={
+      currentUser?.coverpic && currentUser.coverpic.trim() !== ""
+        ? currentUser.coverpic
+        : "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop"
+    }
+    alt="Cover Banner"
+  />
 
-        {/* Profile Picture Container with Fallback */}
-        <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 rounded-full border-4 border-white overflow-hidden size-28 shadow-lg bg-slate-800">
-          <img
-            className="w-full h-full object-cover"
-            src={currentUser?.profilepic && currentUser?.profilepic.trim() !== "" ? currentUser.profilepic : defaultProfile}
-            alt="Profile Picture"
-          />
-        </div>
-      </div>
+  
+  <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 rounded-full border-4 border-white overflow-hidden size-28 shadow-lg bg-slate-800">
+    <img
+      className="w-full h-full object-cover"
+      src={
+        currentUser?.profilepic && currentUser.profilepic.trim() !== ""
+          ? currentUser.profilepic
+          : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+      }
+      alt="Profile Picture"
+    />
+  </div>
+</div>
 
       <div className="info flex justify-center items-center flex-col my-14">
         <div className="font-bold text-lg">@{username}</div>
