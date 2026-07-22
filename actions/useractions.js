@@ -36,10 +36,10 @@ export const initiate = async (amount, to_username, paymentform) => {
 export const fetchuser = async (username) => {
   await connectDb();
   const cleanUsername = username.trim().toLowerCase();
-  
+
   // Use a case-insensitive regex match for username fetching
-  let u = await User.findOne({ 
-    username: { $regex: new RegExp(`^${cleanUsername}$`, "i") } 
+  let u = await User.findOne({
+    username: { $regex: new RegExp(`^${cleanUsername}$`, "i") },
   });
 
   if (!u) {
@@ -54,17 +54,17 @@ export const fetchpayments = async (username) => {
   await connectDb();
   const cleanUsername = username.trim().toLowerCase();
 
-  let user = await User.findOne({ 
-    username: { $regex: new RegExp(`^${cleanUsername}$`, "i") } 
+  let user = await User.findOne({
+    username: { $regex: new RegExp(`^${cleanUsername}$`, "i") },
   });
   if (!user) return [];
 
-  let p = await Payment.find({ 
-    to_user: { $regex: new RegExp(`^${cleanUsername}$`, 'i') }, 
-    done: true 
+  let p = await Payment.find({
+    to_user: { $regex: new RegExp(`^${cleanUsername}$`, "i") },
+    done: true,
   })
-  .sort({ amount: -1 })
-  .lean();
+    .sort({ amount: -1 })
+    .lean();
 
   return JSON.parse(JSON.stringify(p));
 };
@@ -72,18 +72,28 @@ export const fetchpayments = async (username) => {
 export const updateProfile = async (ndata, oldusername) => {
   await connectDb();
 
-  if (oldusername !== ndata.username) {
-    let u = await User.findOne({ username: ndata.username });
-    if (u) {
+  // Ensure ndata is a clean object
+  let updateData = { ...ndata };
+
+  // If username is being changed, check for duplicates
+  if (oldusername !== updateData.username) {
+    let existingUser = await User.findOne({ username: updateData.username });
+    if (existingUser) {
       return { error: "Username already exists" };
     }
 
-    await User.updateOne({ username: oldusername }, ndata);
+    // Update user using $set
+    await User.updateOne({ username: oldusername }, { $set: updateData });
+
+    // Update Payments table to reflect the new username
     await Payment.updateMany(
       { to_user: oldusername },
-      { to_user: ndata.username }
+      { $set: { to_user: updateData.username } },
     );
   } else {
-    await User.updateOne({ username: oldusername }, ndata);
+    // Update user by email or username using $set
+    await User.updateOne({ email: updateData.email }, { $set: updateData });
   }
+
+  return { success: true };
 };
