@@ -83,21 +83,20 @@ export const updateProfile = async (ndata, oldusername) => {
 
   // If they are trying to change their username
   if (oldusername !== ndata.username) {
-    // FIX 1: Change pdata.username to ndata.username
+    // Check if the new username already exists
     let u = await User.findOne({ username: ndata.username });
+
     if (u) {
       return { error: "Username already exists" };
     }
+
     await User.updateOne({ username: oldusername }, ndata);
+
     await Payment.updateMany(
       { to_user: oldusername },
-      { to_user: ndata.username },
+      { to_user: ndata.username }
     );
-  }
-
-  // FIX 2: Change { email: ndata.email } to { username: oldusername }
-  // This makes sure MongoDB updates the right user based on their current username
-  else {
+  } else {
     await User.updateOne({ email: ndata.email }, ndata);
   }
 };
