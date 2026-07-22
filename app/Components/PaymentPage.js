@@ -103,27 +103,19 @@ const PaymentPage = ({ username }) => {
 
       <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
 
-     <div className="cover w-full relative">
- 
+    <div className="cover w-full relative">
+  {/* Cover Banner - fixed clean height */}
   <img
-    className="object-cover w-full md:h-80 h-64"
-    src={
-      currentUser?.coverpic && currentUser.coverpic.trim() !== ""
-        ? currentUser.coverpic
-        : "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop"
-    }
+    className="object-cover w-full h-[250px] md:h-[320px]"
+    src={currentUser?.coverpic || "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop"}
     alt="Cover Banner"
   />
 
-  
-  <div className="absolute -bottom-14 left-1/2 -translate-x-1/2 rounded-full border-4 border-white overflow-hidden size-28 shadow-lg bg-slate-800">
+  {/* Profile Picture - perfectly centered circle on the bottom edge */}
+  <div className="profilepic absolute -bottom-14 left-1/2 -translate-x-1/2 flex justify-center items-center">
     <img
-      className="w-full h-full object-cover"
-      src={
-        currentUser?.profilepic && currentUser.profilepic.trim() !== ""
-          ? currentUser.profilepic
-          : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-      }
+      className="rounded-full border-4 border-slate-900 object-cover w-28 h-28 md:w-32 md:h-32 shadow-xl bg-slate-800"
+      src={currentUser?.profilepic || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"}
       alt="Profile Picture"
     />
   </div>
